@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,40 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MOVIXA</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#101018;color:white;font-family:Arial,sans-serif}
-header{padding:22px;background:#191923;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:27px;font-weight:bold;color:#ff3155}
-h2{padding:0 18px}
-.search{padding:18px}
-input{width:100%;padding:15px;border:0;border-radius:10px;background:#292936;color:white;font-size:16px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:15px}
-.movie{background:#20202c;border-radius:12px;overflow:hidden}
-.movie img{width:100%;height:210px;object-fit:cover}
-.movie h3{padding:0 10px;font-size:15px}
-.movie p{padding:0 10px;color:#aaa;font-size:13px}
-footer{text-align:center;padding:25px;color:#aaa}
+body{margin:0;background:#101018;color:white;font-family:Arial;text-align:center}
+header{background:#191927;padding:22px;color:#e5094f;font-size:30px;font-weight:bold}
+input{padding:13px;width:75%;margin:20px;border-radius:10px;border:0}
+button{padding:12px;background:#e5094f;color:white;border:0;border-radius:8px}
+#movies{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:12px}
+.card{background:#202030;border-radius:10px;padding:10px}
+img{width:100%;border-radius:8px}
+h3{font-size:16px}
 </style>
 </head>
 <body>
-<header>
-<div class="logo">MOVIXA</div>
-<div>🎬 أفلام ومسلسلات</div>
-</header>
-<div class="search">
-<input id="search" placeholder="ابحث عن فيلم أو مسلسل...">
-</div>
-<h2>اكتشف الأفلام</h2>
-<div class="grid" id="movies">
-<div class="movie">
-<img src="https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg">
-<h3>Oppenheimer</h3><p>فيلم دراما وتشويق</p>
-</div>
-<div class="movie">
-<img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg">
-<h3>The Dark Knight</h3><p>فيلم أكشن</p>
-</div>
-</div>
-<footer>MOVIXA © 2026</footer>
+<header>MOVIXA 🎬</header>
+<h2>اكتشف عالم الأفلام والمسلسلات</h2>
+<input id="search" placeholder="ابحث عن مسلسل...">
+<button onclick="findShows()">بحث</button>
+<div id="movies"></div>
+<script>
+async function findShows(){
+const q=document.getElementById("search").value.trim();
+if(!q)return;
+const box=document.getElementById("movies");
+box.innerHTML="جاري البحث...";
+try{
+const r=await fetch("https://api.tvmaze.com/search/shows?q="+encodeURIComponent(q));
+const data=await r.json();
+box.innerHTML="";
+data.forEach(item=>{
+const s=item.show;
+const img=s.image?s.image.medium:"https://placehold.co/210x295?text=MOVIXA";
+box.innerHTML+=`<div class="card">
+<img src="${img}">
+<h3>${s.name}</h3>
+<p>${s.premiered||"غير معروف"}</p>
+</div>`;
+});
+if(!data.length)box.innerHTML="لم نجد نتائج";
+}catch(e){box.innerHTML="حدث خطأ، حاول مجددا";}
+}
+</script>
 </body>
 </html>
