@@ -8,36 +8,34 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080a12;color:white;font-family:Arial,sans-serif}
-header{padding:18px 5%;background:#10131e;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-bottom:1px solid #292d3c}
-.logo{font-size:30px;font-weight:900;color:#ff174f;letter-spacing:2px}
-nav{display:flex;gap:17px;flex-wrap:wrap}
-nav button{background:none;color:white;padding:8px;border:0;cursor:pointer}
-nav button:hover{color:#ff174f}
-.hero{margin:20px 4%;padding:35px 25px;border-radius:18px;background:linear-gradient(90deg,#080a12,#a20d35);min-height:190px;display:flex;align-items:center}
-.hero h1{font-size:34px;margin:0 0 12px}
+header{padding:17px 5%;background:#10131e;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #292d3c}
+.logo{font-size:29px;font-weight:900;color:#ff174f;letter-spacing:2px}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+button{cursor:pointer}
+nav button,.categories button{background:#202638;color:white;border:0;padding:10px 13px;border-radius:9px}
+nav button.active,.categories button.active{background:#f0184e}
+.hero{margin:20px 4%;padding:30px 22px;border-radius:18px;background:linear-gradient(110deg,#080a12,#a20d35);min-height:175px}
+.hero h1{font-size:30px;margin:5px 0 12px}
 .hero p{color:#ddd;line-height:1.7}
 .search{display:flex;gap:8px;margin:20px 4%}
 input{flex:1;min-width:0;padding:14px;background:#171c2a;color:white;border:1px solid #363c4c;border-radius:10px;font-size:16px}
-button{cursor:pointer}
 .search button,.mainbtn{background:#f0184e;color:white;border:0;border-radius:9px;padding:12px 18px;font-weight:bold}
 h2{margin:25px 4% 12px;font-size:21px}
 .categories{display:flex;gap:9px;margin:0 4%;overflow-x:auto;padding-bottom:12px}
-.categories button{background:#1a2030;color:white;border:0;padding:11px 17px;border-radius:20px;white-space:nowrap}
-.categories button.active{background:#f0184e}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:12px 4%}
-.card{background:#151a28;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s}
-.card:hover{transform:translateY(-4px)}
+.categories button{white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:12px 4%}
+.card{background:#151a28;border-radius:12px;overflow:hidden;cursor:pointer}
 .card img{width:100%;height:230px;object-fit:cover;background:#252b39}
 .info{padding:10px}
 .info h3{font-size:15px;margin:4px 0 8px}
 .muted{color:#aaa;font-size:12px}
 .rating{color:#ffc94e;font-size:13px;margin-top:7px}
-.fav{background:#292f40;color:white;border:0;border-radius:8px;padding:8px;margin-top:10px;width:100%}
+.fav{background:#292f40;color:white;border:0;border-radius:8px;padding:9px;margin-top:10px;width:100%}
 .fav.selected{color:#ff4c75}
 #message{text-align:center;color:#aaa;padding:20px}
-#modal{display:none;position:fixed;inset:0;background:#000e;z-index:5;overflow:auto;padding:20px}
+#modal{display:none;position:fixed;inset:0;background:#000e;z-index:5;overflow:auto;padding:15px}
 .detail{max-width:460px;margin:25px auto;background:#171d2c;padding:20px;border-radius:15px}
-.detail img{width:100%;max-height:300px;object-fit:cover;border-radius:10px}
+.detail img{width:100%;max-height:350px;object-fit:cover;border-radius:10px}
 .detail p{line-height:1.8;color:#ddd}
 .close{background:#3b4255;color:white;border:0;padding:10px;border-radius:8px;float:left}
 footer{text-align:center;padding:30px;color:#888;border-top:1px solid #242a37;margin-top:30px}
@@ -49,38 +47,37 @@ footer{text-align:center;padding:30px;color:#888;border-top:1px solid #242a37;ma
 <header>
 <div class="logo">MOVIXA</div>
 <nav>
-<button onclick="home()">الرئيسية</button>
+<button class="active" onclick="showTab('all',this)">الرئيسية</button>
+<button onclick="showTab('movie',this)">🎬 الأفلام</button>
+<button onclick="showTab('series',this)">📺 المسلسلات</button>
 <button onclick="favorites()">❤️ المفضلة</button>
-<button onclick="home()">المسلسلات</button>
 </nav>
 </header>
 
 <section class="hero">
-<div>
-<h1>اكتشف عالم السينما 🎬</h1>
-<p>أفضل المسلسلات والقصص في مكان واحد.<br>استمتع باكتشاف أعمال جديدة كل يوم.</p>
-<button class="mainbtn" onclick="home()">اكتشف الآن</button>
-</div>
+<h1>أهلاً بك في MOVIXA 🎬</h1>
+<p>اكتشف أفضل الأفلام والمسلسلات في مكان واحد.<br>عالم الترفيه بين يديك.</p>
+<button class="mainbtn" onclick="showTab('all')">اكتشف الآن</button>
 </section>
 
 <div class="search">
-<input id="search" placeholder="ابحث عن مسلسل...">
-<button onclick="searchShows()">بحث</button>
+<input id="search" placeholder="ابحث عن فيلم أو مسلسل...">
+<button onclick="searchAll()">بحث</button>
 </div>
 
-<h2 id="heading">🔥 أشهر المسلسلات</h2>
+<h2 id="heading">🔥 أشهر الأفلام والمسلسلات</h2>
 
 <div class="categories">
-<button class="active" onclick="category('all',this)">الكل</button>
-<button onclick="category('Drama',this)">دراما</button>
-<button onclick="category('Action',this)">أكشن</button>
-<button onclick="category('Comedy',this)">كوميديا</button>
-<button onclick="category('Romance',this)">رومانسي</button>
-<button onclick="category('Crime',this)">جريمة</button>
-<button onclick="category('Science-Fiction',this)">خيال علمي</button>
+<button class="active" onclick="filterGenre('all',this)">الكل</button>
+<button onclick="filterGenre('Action',this)">أكشن</button>
+<button onclick="filterGenre('Drama',this)">دراما</button>
+<button onclick="filterGenre('Comedy',this)">كوميديا</button>
+<button onclick="filterGenre('Romance',this)">رومانسي</button>
+<button onclick="filterGenre('Crime',this)">جريمة</button>
+<button onclick="filterGenre('Science-Fiction',this)">خيال علمي</button>
 </div>
 
-<div id="message">جاري تحميل المسلسلات...</div>
+<div id="message">جاري التحميل...</div>
 <div class="grid" id="movies"></div>
 
 <div id="modal" onclick="if(event.target===this)closeModal()">
@@ -99,8 +96,21 @@ footer{text-align:center;padding:30px;color:#888;border-top:1px solid #242a37;ma
 <script>
 const movies=document.getElementById('movies');
 const message=document.getElementById('message');
+
+const films=[
+{id:'m1',name:'Inception',year:2010,genre:['Action','Science-Fiction'],rating:8.8,image:'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg',description:'A thief who steals corporate secrets through dream-sharing technology receives an inverse task.'},
+{id:'m2',name:'Interstellar',year:2014,genre:['Drama','Science-Fiction'],rating:8.7,image:'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',description:'A team of explorers travels beyond this galaxy to discover whether mankind has a future among the stars.'},
+{id:'m3',name:'The Dark Knight',year:2008,genre:['Action','Crime'],rating:9.0,image:'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',description:'Batman faces a dangerous criminal who threatens Gotham City.'},
+{id:'m4',name:'Joker',year:2019,genre:['Drama','Crime'],rating:8.4,image:'https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg',description:'A troubled comedian begins a dark transformation in Gotham City.'},
+{id:'m5',name:'Titanic',year:1997,genre:['Drama','Romance'],rating:7.9,image:'https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg',description:'A love story unfolds aboard the legendary ship Titanic.'},
+{id:'m6',name:'Avengers: Endgame',year:2019,genre:['Action','Science-Fiction'],rating:8.4,image:'https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg',description:'The Avengers assemble for one final battle to restore the universe.'},
+{id:'m7',name:'Spider-Man: No Way Home',year:2021,genre:['Action','Science-Fiction'],rating:8.2,image:'https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg',description:'Peter Parker faces the consequences of a world that knows his identity.'},
+{id:'m8',name:'The Hangover',year:2009,genre:['Comedy'],rating:7.7,image:'https://image.tmdb.org/t/p/w500/uluhlXubGu1VxU63X9VHCLWDAYP.jpg',description:'Three friends try to remember what happened during a wild night in Las Vegas.'}
+];
+
 let allShows=[];
-let currentShows=[];
+let currentTab='all';
+let currentItems=[];
 let favs=JSON.parse(localStorage.getItem('movixa_favs')||'[]');
 
 async function load(){
@@ -109,47 +119,79 @@ try{
 const r=await fetch('https://api.tvmaze.com/shows?page=0');
 if(!r.ok)throw Error();
 allShows=await r.json();
-render(allShows.slice(0,40));
+showTab('all');
 }catch(e){
-message.textContent='تعذر الاتصال. تحقق من الإنترنت وحاول مجدداً.';
+render(films);
+message.textContent='تعذر تحميل المسلسلات. الأفلام متوفرة.';
 }
 }
 
-function render(shows){
-currentShows=shows;
+function render(items){
+currentItems=items;
 movies.innerHTML='';
-message.textContent=shows.length?'':'لا توجد نتائج.';
-shows.forEach(s=>{
+message.textContent=items.length?'':'لا توجد نتائج.';
+
+items.forEach(s=>{
+const id=String(s.id);
 const card=document.createElement('div');
 card.className='card';
+
 const img=document.createElement('img');
-img.src=s.image?.medium||'';
+img.src=s.image?.medium||s.image||'';
 img.alt=s.name;
 img.loading='lazy';
+img.onerror=()=>{img.style.display='none'};
+
 const info=document.createElement('div');
 info.className='info';
+
 const title=document.createElement('h3');
 title.textContent=s.name;
+
 const genres=document.createElement('div');
 genres.className='muted';
-genres.textContent=(s.genres||[]).slice(0,2).join(' • ')||'مسلسل';
+genres.textContent=(s.genre||s.genres||[]).slice(0,2).join(' • ')||'عمل سينمائي';
+
 const rating=document.createElement('div');
 rating.className='rating';
-rating.textContent='⭐ '+(s.rating?.average||'غير متوفر');
+rating.textContent='⭐ '+(s.rating?.average||s.rating||'غير متوفر');
+
 const fav=document.createElement('button');
-fav.className='fav '+(favs.includes(s.id)?'selected':'');
-fav.textContent=favs.includes(s.id)?'❤️ في المفضلة':'♡ أضف للمفضلة';
-fav.onclick=(e)=>{
+fav.className='fav '+(favs.includes(id)?'selected':'');
+fav.textContent=favs.includes(id)?'❤️ في المفضلة':'♡ أضف للمفضلة';
+
+fav.onclick=e=>{
 e.stopPropagation();
-toggleFav(s.id);
-fav.classList.toggle('selected',favs.includes(s.id));
-fav.textContent=favs.includes(s.id)?'❤️ في المفضلة':'♡ أضف للمفضلة';
+toggleFav(id);
+fav.classList.toggle('selected',favs.includes(id));
+fav.textContent=favs.includes(id)?'❤️ في المفضلة':'♡ أضف للمفضلة';
 };
+
 info.append(title,genres,rating,fav);
 card.append(img,info);
 card.onclick=()=>details(s);
 movies.append(card);
 });
+}
+
+function showTab(tab,btn){
+currentTab=tab;
+if(btn){
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+}
+let items=[];
+if(tab==='movie'){
+items=films;
+document.getElementById('heading').textContent='🎬 أشهر الأفلام';
+}else if(tab==='series'){
+items=allShows.slice(0,40);
+document.getElementById('heading').textContent='📺 أشهر المسلسلات';
+}else{
+items=[...films,...allShows.slice(0,32)];
+document.getElementById('heading').textContent='🔥 أشهر الأفلام والمسلسلات';
+}
+render(items);
 }
 
 function toggleFav(id){
@@ -159,57 +201,72 @@ localStorage.setItem('movixa_favs',JSON.stringify(favs));
 
 function favorites(){
 document.getElementById('heading').textContent='❤️ المفضلة';
-render(allShows.filter(s=>favs.includes(s.id)));
+render([...films,...allShows].filter(s=>favs.includes(String(s.id))));
 }
 
-function home(){
-document.getElementById('heading').textContent='🔥 أشهر المسلسلات';
-render(allShows.slice(0,40));
-}
-
-function category(g,b){
+function filterGenre(g,b){
 document.querySelectorAll('.categories button').forEach(x=>x.classList.remove('active'));
 b.classList.add('active');
-document.getElementById('heading').textContent='تصنيف '+(b.textContent);
-render(g==='all'?allShows.slice(0,40):allShows.filter(s=>(s.genres||[]).includes(g)));
+const items=[...films,...allShows.slice(0,100)];
+document.getElementById('heading').textContent=g==='all'?'🔥 الكل':'تصنيف '+b.textContent;
+render(g==='all'?items:items.filter(s=>(s.genre||s.genres||[]).includes(g)));
 }
 
-async function searchShows(){
+async function searchAll(){
 const q=document.getElementById('search').value.trim();
 if(!q)return;
 message.textContent='جاري البحث...';
 movies.innerHTML='';
+const local=films.filter(s=>s.name.toLowerCase().includes(q.toLowerCase()));
 try{
 const r=await fetch('https://api.tvmaze.com/search/shows?q='+encodeURIComponent(q));
 const data=await r.json();
 document.getElementById('heading').textContent='نتائج البحث';
-render(data.map(x=>x.show));
+render([...local,...data.map(x=>x.show)]);
 }catch(e){
-message.textContent='حدث خطأ في البحث.';
+document.getElementById('heading').textContent='نتائج البحث';
+render(local);
 }
 }
 
 document.getElementById('search').addEventListener('keydown',e=>{
-if(e.key==='Enter')searchShows();
+if(e.key==='Enter')searchAll();
 });
 
 function details(s){
 const box=document.getElementById('detailContent');
 box.innerHTML='';
+
+const image=s.image?.original||s.image?.medium||s.image||'';
+if(image){
 const img=document.createElement('img');
-img.src=s.image?.original||s.image?.medium||'';
+img.src=image;
 img.alt=s.name;
+box.append(img);
+}
+
 const title=document.createElement('h2');
 title.textContent=s.name;
+
 const genre=document.createElement('p');
-genre.textContent='التصنيف: '+(s.genres||[]).join(' • ');
+genre.textContent='التصنيف: '+(s.genre||s.genres||[]).join(' • ');
+
 const rating=document.createElement('p');
-rating.textContent='⭐ التقييم: '+(s.rating?.average||'غير متوفر');
+rating.textContent='⭐ التقييم: '+(s.rating?.average||s.rating||'غير متوفر');
+
+const year=document.createElement('p');
+year.textContent='السنة: '+(s.year||s.premiered?.slice(0,4)||'غير متوفرة');
+
 const desc=document.createElement('p');
+if(s.description){
+desc.textContent=s.description;
+}else{
 const temp=document.createElement('div');
 temp.innerHTML=s.summary||'';
 desc.textContent=temp.textContent||'لا يوجد وصف متوفر.';
-box.append(img,title,genre,rating,desc);
+}
+
+box.append(title,genre,rating,year,desc);
 document.getElementById('modal').style.display='block';
 }
 
