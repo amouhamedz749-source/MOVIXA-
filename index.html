@@ -3,63 +3,84 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MOVIXA - عالم السينما</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MOVIXA</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090d18;color:white;font-family:Arial,sans-serif}
-header{background:#111827;padding:22px 16px;text-align:center;border-bottom:2px solid #e50945}
-.logo{font-size:34px;font-weight:bold;color:#ff174f;letter-spacing:3px}
-header p{color:#aaa;margin:8px 0}
-.search{display:flex;gap:8px;padding:18px 14px}
-input{flex:1;min-width:0;padding:14px;border:1px solid #343c4e;border-radius:10px;background:#182235;color:white;font-size:16px}
-button{border:0;border-radius:10px;padding:12px 17px;background:#ed174c;color:white;font-weight:bold;cursor:pointer}
-h2{padding:0 15px;font-size:20px}
-.categories{display:flex;gap:9px;padding:8px 14px;overflow-x:auto}
-.categories button{white-space:nowrap;background:#202a3c}
-.categories button.active{background:#ed174c}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:12px}
-.card{background:#151e2e;border-radius:12px;overflow:hidden;cursor:pointer}
-.card img{width:100%;height:230px;object-fit:cover;background:#263246}
+body{margin:0;background:#080a12;color:white;font-family:Arial,sans-serif}
+header{padding:18px 5%;background:#10131e;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-bottom:1px solid #292d3c}
+.logo{font-size:30px;font-weight:900;color:#ff174f;letter-spacing:2px}
+nav{display:flex;gap:17px;flex-wrap:wrap}
+nav button{background:none;color:white;padding:8px;border:0;cursor:pointer}
+nav button:hover{color:#ff174f}
+.hero{margin:20px 4%;padding:35px 25px;border-radius:18px;background:linear-gradient(90deg,#080a12,#a20d35);min-height:190px;display:flex;align-items:center}
+.hero h1{font-size:34px;margin:0 0 12px}
+.hero p{color:#ddd;line-height:1.7}
+.search{display:flex;gap:8px;margin:20px 4%}
+input{flex:1;min-width:0;padding:14px;background:#171c2a;color:white;border:1px solid #363c4c;border-radius:10px;font-size:16px}
+button{cursor:pointer}
+.search button,.mainbtn{background:#f0184e;color:white;border:0;border-radius:9px;padding:12px 18px;font-weight:bold}
+h2{margin:25px 4% 12px;font-size:21px}
+.categories{display:flex;gap:9px;margin:0 4%;overflow-x:auto;padding-bottom:12px}
+.categories button{background:#1a2030;color:white;border:0;padding:11px 17px;border-radius:20px;white-space:nowrap}
+.categories button.active{background:#f0184e}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:12px 4%}
+.card{background:#151a28;border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-4px)}
+.card img{width:100%;height:230px;object-fit:cover;background:#252b39}
 .info{padding:10px}
-.info h3{font-size:15px;margin:3px 0 8px}
-.muted{font-size:12px;color:#aaa}
-.rating{color:#ffc74a;font-size:13px}
-#message{text-align:center;color:#aaa;padding:25px}
-footer{text-align:center;color:#777;padding:25px;font-size:12px}
-#modal{display:none;position:fixed;inset:0;background:#000d;z-index:5;overflow:auto;padding:20px}
-.detail{max-width:480px;margin:30px auto;background:#172235;padding:20px;border-radius:15px}
+.info h3{font-size:15px;margin:4px 0 8px}
+.muted{color:#aaa;font-size:12px}
+.rating{color:#ffc94e;font-size:13px;margin-top:7px}
+.fav{background:#292f40;color:white;border:0;border-radius:8px;padding:8px;margin-top:10px;width:100%}
+.fav.selected{color:#ff4c75}
+#message{text-align:center;color:#aaa;padding:20px}
+#modal{display:none;position:fixed;inset:0;background:#000e;z-index:5;overflow:auto;padding:20px}
+.detail{max-width:460px;margin:25px auto;background:#171d2c;padding:20px;border-radius:15px}
 .detail img{width:100%;max-height:300px;object-fit:cover;border-radius:10px}
-.close{float:left;background:#39445a}
 .detail p{line-height:1.8;color:#ddd}
-a{color:#ff6488}
-@media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.card img{height:280px}}
+.close{background:#3b4255;color:white;border:0;padding:10px;border-radius:8px;float:left}
+footer{text-align:center;padding:30px;color:#888;border-top:1px solid #242a37;margin-top:30px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}.card img{height:280px}}
 </style>
 </head>
 <body>
+
 <header>
 <div class="logo">MOVIXA</div>
-<p>عالم الأفلام والمسلسلات بين يديك 🎬</p>
+<nav>
+<button onclick="home()">الرئيسية</button>
+<button onclick="favorites()">❤️ المفضلة</button>
+<button onclick="home()">المسلسلات</button>
+</nav>
 </header>
 
+<section class="hero">
+<div>
+<h1>اكتشف عالم السينما 🎬</h1>
+<p>أفضل المسلسلات والقصص في مكان واحد.<br>استمتع باكتشاف أعمال جديدة كل يوم.</p>
+<button class="mainbtn" onclick="home()">اكتشف الآن</button>
+</div>
+</section>
+
 <div class="search">
-<input id="search" placeholder="ابحث عن فيلم أو مسلسل...">
+<input id="search" placeholder="ابحث عن مسلسل...">
 <button onclick="searchShows()">بحث</button>
 </div>
 
-<h2>التصنيفات</h2>
-<div class="categories" id="categories">
-<button class="active" onclick="loadShows('all',this)">الكل</button>
-<button onclick="loadShows('Drama',this)">دراما</button>
-<button onclick="loadShows('Action',this)">أكشن</button>
-<button onclick="loadShows('Comedy',this)">كوميديا</button>
-<button onclick="loadShows('Romance',this)">رومانسي</button>
-<button onclick="loadShows('Crime',this)">جريمة</button>
-<button onclick="loadShows('Science-Fiction',this)">خيال علمي</button>
+<h2 id="heading">🔥 أشهر المسلسلات</h2>
+
+<div class="categories">
+<button class="active" onclick="category('all',this)">الكل</button>
+<button onclick="category('Drama',this)">دراما</button>
+<button onclick="category('Action',this)">أكشن</button>
+<button onclick="category('Comedy',this)">كوميديا</button>
+<button onclick="category('Romance',this)">رومانسي</button>
+<button onclick="category('Crime',this)">جريمة</button>
+<button onclick="category('Science-Fiction',this)">خيال علمي</button>
 </div>
 
-<h2 id="heading">اكتشف أشهر المسلسلات</h2>
-<div id="message">جاري تحميل الأعمال...</div>
+<div id="message">جاري تحميل المسلسلات...</div>
 <div class="grid" id="movies"></div>
 
 <div id="modal" onclick="if(event.target===this)closeModal()">
@@ -69,113 +90,134 @@ a{color:#ff6488}
 </div>
 </div>
 
-<footer>MOVIXA © 2026 - جميع الحقوق محفوظة</footer>
+<footer>
+<div class="logo">MOVIXA</div>
+<p>اكتشف. استمتع. كرر.</p>
+<p>© 2026 MOVIXA</p>
+</footer>
 
 <script>
 const movies=document.getElementById('movies');
 const message=document.getElementById('message');
-const searchInput=document.getElementById('search');
 let allShows=[];
+let currentShows=[];
+let favs=JSON.parse(localStorage.getItem('movixa_favs')||'[]');
 
-function clean(text){
- const el=document.createElement('div');
- el.innerHTML=text||'';
- return el.textContent||'';
+async function load(){
+message.textContent='جاري تحميل المسلسلات...';
+try{
+const r=await fetch('https://api.tvmaze.com/shows?page=0');
+if(!r.ok)throw Error();
+allShows=await r.json();
+render(allShows.slice(0,40));
+}catch(e){
+message.textContent='تعذر الاتصال. تحقق من الإنترنت وحاول مجدداً.';
+}
 }
 
 function render(shows){
- movies.innerHTML='';
- message.textContent=shows.length?'':'لم نجد نتائج. جرّب البحث بكلمة أخرى.';
- shows.forEach(show=>{
-  const img=show.image?.medium||'';
-  const rating=show.rating?.average||'غير متوفر';
-  const card=document.createElement('div');
-  card.className='card';
-  card.innerHTML=`
-   <img src="${img}" alt="" loading="lazy">
-   <div class="info">
-    <h3></h3>
-    <div class="rating">⭐ ${rating}</div>
-    <div class="muted"></div>
-   </div>`;
-  card.querySelector('h3').textContent=show.name;
-  card.querySelector('.muted').textContent=(show.genres||[]).slice(0,2).join(' • ')||'مسلسل';
-  card.onclick=()=>showDetails(show);
-  movies.appendChild(card);
- });
+currentShows=shows;
+movies.innerHTML='';
+message.textContent=shows.length?'':'لا توجد نتائج.';
+shows.forEach(s=>{
+const card=document.createElement('div');
+card.className='card';
+const img=document.createElement('img');
+img.src=s.image?.medium||'';
+img.alt=s.name;
+img.loading='lazy';
+const info=document.createElement('div');
+info.className='info';
+const title=document.createElement('h3');
+title.textContent=s.name;
+const genres=document.createElement('div');
+genres.className='muted';
+genres.textContent=(s.genres||[]).slice(0,2).join(' • ')||'مسلسل';
+const rating=document.createElement('div');
+rating.className='rating';
+rating.textContent='⭐ '+(s.rating?.average||'غير متوفر');
+const fav=document.createElement('button');
+fav.className='fav '+(favs.includes(s.id)?'selected':'');
+fav.textContent=favs.includes(s.id)?'❤️ في المفضلة':'♡ أضف للمفضلة';
+fav.onclick=(e)=>{
+e.stopPropagation();
+toggleFav(s.id);
+fav.classList.toggle('selected',favs.includes(s.id));
+fav.textContent=favs.includes(s.id)?'❤️ في المفضلة':'♡ أضف للمفضلة';
+};
+info.append(title,genres,rating,fav);
+card.append(img,info);
+card.onclick=()=>details(s);
+movies.append(card);
+});
 }
 
-async function loadShows(genre,button){
- document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
- if(button)button.classList.add('active');
- document.getElementById('heading').textContent=genre==='all'?'اكتشف أشهر المسلسلات':'تصنيف '+genre;
- message.textContent='جاري التحميل...';
- movies.innerHTML='';
- try{
-  if(!allShows.length){
-   const res=await fetch('https://api.tvmaze.com/shows?page=0');
-   if(!res.ok)throw new Error();
-   allShows=await res.json();
-  }
-  const result=genre==='all'?allShows.slice(0,40):allShows.filter(s=>(s.genres||[]).includes(genre)).slice(0,40);
-  render(result);
- }catch(e){
-  message.textContent='تعذر الاتصال. تأكد من الإنترنت وحاول مجدداً.';
- }
+function toggleFav(id){
+favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];
+localStorage.setItem('movixa_favs',JSON.stringify(favs));
+}
+
+function favorites(){
+document.getElementById('heading').textContent='❤️ المفضلة';
+render(allShows.filter(s=>favs.includes(s.id)));
+}
+
+function home(){
+document.getElementById('heading').textContent='🔥 أشهر المسلسلات';
+render(allShows.slice(0,40));
+}
+
+function category(g,b){
+document.querySelectorAll('.categories button').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+document.getElementById('heading').textContent='تصنيف '+(b.textContent);
+render(g==='all'?allShows.slice(0,40):allShows.filter(s=>(s.genres||[]).includes(g)));
 }
 
 async function searchShows(){
- const q=searchInput.value.trim();
- if(!q)return;
- message.textContent='جاري البحث...';
- movies.innerHTML='';
- try{
-  const res=await fetch('https://api.tvmaze.com/search/shows?q='+encodeURIComponent(q));
-  const data=await res.json();
-  render(data.map(x=>x.show));
-  document.getElementById('heading').textContent='نتائج البحث';
- }catch(e){
-  message.textContent='حدث خطأ في البحث.';
- }
+const q=document.getElementById('search').value.trim();
+if(!q)return;
+message.textContent='جاري البحث...';
+movies.innerHTML='';
+try{
+const r=await fetch('https://api.tvmaze.com/search/shows?q='+encodeURIComponent(q));
+const data=await r.json();
+document.getElementById('heading').textContent='نتائج البحث';
+render(data.map(x=>x.show));
+}catch(e){
+message.textContent='حدث خطأ في البحث.';
+}
 }
 
-searchInput.addEventListener('keydown',e=>{
- if(e.key==='Enter')searchShows();
+document.getElementById('search').addEventListener('keydown',e=>{
+if(e.key==='Enter')searchShows();
 });
 
-function showDetails(show){
- const img=show.image?.original||show.image?.medium||'';
- document.getElementById('detailContent').innerHTML='';
- const box=document.getElementById('detailContent');
- const image=document.createElement('img');
- image.src=img;
- image.alt=show.name;
- const title=document.createElement('h2');
- title.textContent=show.name;
- const genres=document.createElement('p');
- genres.textContent='التصنيف: '+(show.genres||[]).join(' • ');
- const rating=document.createElement('p');
- rating.textContent='⭐ التقييم: '+(show.rating?.average||'غير متوفر');
- const summary=document.createElement('p');
- summary.textContent=clean(show.summary)||'لا يوجد وصف متاح.';
- box.append(image,title,genres,rating,summary);
- if(show.url){
-  const link=document.createElement('a');
-  link.href=show.url;
-  link.target='_blank';
-  link.rel='noopener';
-  link.textContent='معلومات إضافية';
-  box.append(link);
- }
- document.getElementById('modal').style.display='block';
+function details(s){
+const box=document.getElementById('detailContent');
+box.innerHTML='';
+const img=document.createElement('img');
+img.src=s.image?.original||s.image?.medium||'';
+img.alt=s.name;
+const title=document.createElement('h2');
+title.textContent=s.name;
+const genre=document.createElement('p');
+genre.textContent='التصنيف: '+(s.genres||[]).join(' • ');
+const rating=document.createElement('p');
+rating.textContent='⭐ التقييم: '+(s.rating?.average||'غير متوفر');
+const desc=document.createElement('p');
+const temp=document.createElement('div');
+temp.innerHTML=s.summary||'';
+desc.textContent=temp.textContent||'لا يوجد وصف متوفر.';
+box.append(img,title,genre,rating,desc);
+document.getElementById('modal').style.display='block';
 }
 
 function closeModal(){
- document.getElementById('modal').style.display='none';
+document.getElementById('modal').style.display='none';
 }
 
-loadShows('all',document.querySelector('.categories button'));
+load();
 </script>
 </body>
 </html>
-
