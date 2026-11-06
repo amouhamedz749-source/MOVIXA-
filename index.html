@@ -1,48 +1,181 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MOVIXA</title>
+<title>MOVIXA - عالم السينما</title>
 <style>
-body{margin:0;background:#101018;color:white;font-family:Arial;text-align:center}
-header{background:#191927;padding:22px;color:#e5094f;font-size:30px;font-weight:bold}
-input{padding:13px;width:75%;margin:20px;border-radius:10px;border:0}
-button{padding:12px;background:#e5094f;color:white;border:0;border-radius:8px}
-#movies{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:12px}
-.card{background:#202030;border-radius:10px;padding:10px}
-img{width:100%;border-radius:8px}
-h3{font-size:16px}
+*{box-sizing:border-box}
+body{margin:0;background:#090d18;color:white;font-family:Arial,sans-serif}
+header{background:#111827;padding:22px 16px;text-align:center;border-bottom:2px solid #e50945}
+.logo{font-size:34px;font-weight:bold;color:#ff174f;letter-spacing:3px}
+header p{color:#aaa;margin:8px 0}
+.search{display:flex;gap:8px;padding:18px 14px}
+input{flex:1;min-width:0;padding:14px;border:1px solid #343c4e;border-radius:10px;background:#182235;color:white;font-size:16px}
+button{border:0;border-radius:10px;padding:12px 17px;background:#ed174c;color:white;font-weight:bold;cursor:pointer}
+h2{padding:0 15px;font-size:20px}
+.categories{display:flex;gap:9px;padding:8px 14px;overflow-x:auto}
+.categories button{white-space:nowrap;background:#202a3c}
+.categories button.active{background:#ed174c}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:12px}
+.card{background:#151e2e;border-radius:12px;overflow:hidden;cursor:pointer}
+.card img{width:100%;height:230px;object-fit:cover;background:#263246}
+.info{padding:10px}
+.info h3{font-size:15px;margin:3px 0 8px}
+.muted{font-size:12px;color:#aaa}
+.rating{color:#ffc74a;font-size:13px}
+#message{text-align:center;color:#aaa;padding:25px}
+footer{text-align:center;color:#777;padding:25px;font-size:12px}
+#modal{display:none;position:fixed;inset:0;background:#000d;z-index:5;overflow:auto;padding:20px}
+.detail{max-width:480px;margin:30px auto;background:#172235;padding:20px;border-radius:15px}
+.detail img{width:100%;max-height:300px;object-fit:cover;border-radius:10px}
+.close{float:left;background:#39445a}
+.detail p{line-height:1.8;color:#ddd}
+a{color:#ff6488}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.card img{height:280px}}
 </style>
 </head>
 <body>
-<header>MOVIXA 🎬</header>
-<h2>اكتشف عالم الأفلام والمسلسلات</h2>
-<input id="search" placeholder="ابحث عن مسلسل...">
-<button onclick="findShows()">بحث</button>
-<div id="movies"></div>
+<header>
+<div class="logo">MOVIXA</div>
+<p>عالم الأفلام والمسلسلات بين يديك 🎬</p>
+</header>
+
+<div class="search">
+<input id="search" placeholder="ابحث عن فيلم أو مسلسل...">
+<button onclick="searchShows()">بحث</button>
+</div>
+
+<h2>التصنيفات</h2>
+<div class="categories" id="categories">
+<button class="active" onclick="loadShows('all',this)">الكل</button>
+<button onclick="loadShows('Drama',this)">دراما</button>
+<button onclick="loadShows('Action',this)">أكشن</button>
+<button onclick="loadShows('Comedy',this)">كوميديا</button>
+<button onclick="loadShows('Romance',this)">رومانسي</button>
+<button onclick="loadShows('Crime',this)">جريمة</button>
+<button onclick="loadShows('Science-Fiction',this)">خيال علمي</button>
+</div>
+
+<h2 id="heading">اكتشف أشهر المسلسلات</h2>
+<div id="message">جاري تحميل الأعمال...</div>
+<div class="grid" id="movies"></div>
+
+<div id="modal" onclick="if(event.target===this)closeModal()">
+<div class="detail">
+<button class="close" onclick="closeModal()">إغلاق ✕</button>
+<div id="detailContent"></div>
+</div>
+</div>
+
+<footer>MOVIXA © 2026 - جميع الحقوق محفوظة</footer>
+
 <script>
-async function findShows(){
-const q=document.getElementById("search").value.trim();
-if(!q)return;
-const box=document.getElementById("movies");
-box.innerHTML="جاري البحث...";
-try{
-const r=await fetch("https://api.tvmaze.com/search/shows?q="+encodeURIComponent(q));
-const data=await r.json();
-box.innerHTML="";
-data.forEach(item=>{
-const s=item.show;
-const img=s.image?s.image.medium:"https://placehold.co/210x295?text=MOVIXA";
-box.innerHTML+=`<div class="card">
-<img src="${img}">
-<h3>${s.name}</h3>
-<p>${s.premiered||"غير معروف"}</p>
-</div>`;
-});
-if(!data.length)box.innerHTML="لم نجد نتائج";
-}catch(e){box.innerHTML="حدث خطأ، حاول مجددا";}
+const movies=document.getElementById('movies');
+const message=document.getElementById('message');
+const searchInput=document.getElementById('search');
+let allShows=[];
+
+function clean(text){
+ const el=document.createElement('div');
+ el.innerHTML=text||'';
+ return el.textContent||'';
 }
+
+function render(shows){
+ movies.innerHTML='';
+ message.textContent=shows.length?'':'لم نجد نتائج. جرّب البحث بكلمة أخرى.';
+ shows.forEach(show=>{
+  const img=show.image?.medium||'';
+  const rating=show.rating?.average||'غير متوفر';
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=`
+   <img src="${img}" alt="" loading="lazy">
+   <div class="info">
+    <h3></h3>
+    <div class="rating">⭐ ${rating}</div>
+    <div class="muted"></div>
+   </div>`;
+  card.querySelector('h3').textContent=show.name;
+  card.querySelector('.muted').textContent=(show.genres||[]).slice(0,2).join(' • ')||'مسلسل';
+  card.onclick=()=>showDetails(show);
+  movies.appendChild(card);
+ });
+}
+
+async function loadShows(genre,button){
+ document.querySelectorAll('.categories button').forEach(b=>b.classList.remove('active'));
+ if(button)button.classList.add('active');
+ document.getElementById('heading').textContent=genre==='all'?'اكتشف أشهر المسلسلات':'تصنيف '+genre;
+ message.textContent='جاري التحميل...';
+ movies.innerHTML='';
+ try{
+  if(!allShows.length){
+   const res=await fetch('https://api.tvmaze.com/shows?page=0');
+   if(!res.ok)throw new Error();
+   allShows=await res.json();
+  }
+  const result=genre==='all'?allShows.slice(0,40):allShows.filter(s=>(s.genres||[]).includes(genre)).slice(0,40);
+  render(result);
+ }catch(e){
+  message.textContent='تعذر الاتصال. تأكد من الإنترنت وحاول مجدداً.';
+ }
+}
+
+async function searchShows(){
+ const q=searchInput.value.trim();
+ if(!q)return;
+ message.textContent='جاري البحث...';
+ movies.innerHTML='';
+ try{
+  const res=await fetch('https://api.tvmaze.com/search/shows?q='+encodeURIComponent(q));
+  const data=await res.json();
+  render(data.map(x=>x.show));
+  document.getElementById('heading').textContent='نتائج البحث';
+ }catch(e){
+  message.textContent='حدث خطأ في البحث.';
+ }
+}
+
+searchInput.addEventListener('keydown',e=>{
+ if(e.key==='Enter')searchShows();
+});
+
+function showDetails(show){
+ const img=show.image?.original||show.image?.medium||'';
+ document.getElementById('detailContent').innerHTML='';
+ const box=document.getElementById('detailContent');
+ const image=document.createElement('img');
+ image.src=img;
+ image.alt=show.name;
+ const title=document.createElement('h2');
+ title.textContent=show.name;
+ const genres=document.createElement('p');
+ genres.textContent='التصنيف: '+(show.genres||[]).join(' • ');
+ const rating=document.createElement('p');
+ rating.textContent='⭐ التقييم: '+(show.rating?.average||'غير متوفر');
+ const summary=document.createElement('p');
+ summary.textContent=clean(show.summary)||'لا يوجد وصف متاح.';
+ box.append(image,title,genres,rating,summary);
+ if(show.url){
+  const link=document.createElement('a');
+  link.href=show.url;
+  link.target='_blank';
+  link.rel='noopener';
+  link.textContent='معلومات إضافية';
+  box.append(link);
+ }
+ document.getElementById('modal').style.display='block';
+}
+
+function closeModal(){
+ document.getElementById('modal').style.display='none';
+}
+
+loadShows('all',document.querySelector('.categories button'));
 </script>
 </body>
 </html>
+
