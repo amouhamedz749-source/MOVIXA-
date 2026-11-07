@@ -79,7 +79,39 @@ function render(items,type){
  });
 }
 
-async function load(type='trending'){
+async function load(){
+  document.getElementById('heading').textContent='🔥 أشهر الأفلام والمسلسلات';
+
+  render(films);
+
+  message.textContent='جاري تحميل المسلسلات...';
+
+  try {
+    const r = await fetch(
+      'https://api.themoviedb.org/3/tv/popular?language=ar'
+      , {
+        headers: {
+          Authorization: 'Bearer YOUR_TMDB_TOKEN',
+          accept: 'application/json'
+        }
+      }
+    );
+
+    if (!r.ok) throw new Error('API Error');
+
+    const data = await r.json();
+
+    shows = data.results || [];
+
+    render([...films, ...shows]);
+
+    message.textContent='تم تحميل الأفلام والمسلسلات بنجاح 🎉';
+
+  } catch(e) {
+    message.textContent='تعذر تحميل المحتوى. تحقق من مفتاح API والاتصال بالإنترنت.';
+    console.error(e);
+  }
+}{
  const msg=document.getElementById('msg');
  const heading=document.getElementById('heading');
  document.getElementById('grid').innerHTML='';
